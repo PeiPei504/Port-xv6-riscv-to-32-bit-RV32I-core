@@ -1,0 +1,17 @@
+// negotiate features
+  uint32_t features_low = *R(VIRTIO_MMIO_DEVICE_FEATURES);
+  uint32_t features_high = *R(VIRTIO_MMIO_DEVICE_FEATURES + 4);
+  (void)features_high;
+  features_low &= ~(1 << VIRTIO_BLK_F_RO);
+  features_low &= ~(1 << VIRTIO_BLK_F_SCSI);
+  features_low &= ~(1 << VIRTIO_BLK_F_CONFIG_WCE);
+  features_low &= ~(1 << VIRTIO_BLK_F_MQ);
+  features_low &= ~(1 << VIRTIO_F_ANY_LAYOUT);
+  features_low &= ~(1 << VIRTIO_RING_F_EVENT_IDX);
+  features_low &= ~(1 << VIRTIO_RING_F_INDIRECT_DESC);
+  *R(VIRTIO_MMIO_DRIVER_FEATURES) = features_low;
+
+
+// write physical addresses.
+  *R(VIRTIO_MMIO_QUEUE_DESC_LOW) = (uint32_t)(((uintptr_t)disk.desc) & 0xFFFFFFFF);
+  *R(VIRTIO_MMIO_QUEUE_DESC_HIGH) = (uint32_t)((uintptr_t)disk.desc >> 32);
