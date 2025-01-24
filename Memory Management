@@ -1,0 +1,10 @@
+void
+freerange(void *pa_start, void *pa_end)
+{
+  char *p;
+  p = (char*)(uintptr_t)PGROUNDUP((uintptr_t)pa_start);
+  for(; p + PGSIZE <= (char*)pa_end; p += PGSIZE)
+    kfree(p);
+}
+
+
